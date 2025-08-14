@@ -1,70 +1,110 @@
-# Getting Started with Create React App
+# Task Manager - A Full-Stack React & Firebase Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A clean, modern, and full-stack task management application built to demonstrate the power and simplicity of using Firebase as a backend service with a React frontend.
 
-## Available Scripts
+Task Manager Screenshot
+<img width="1916" height="851" alt="image" src="https://github.com/user-attachments/assets/19ae76f1-9e13-4a2d-90dd-49983afb9fee" />
+<img width="1919" height="855" alt="image" src="https://github.com/user-attachments/assets/0101a685-386f-410c-ae8e-3671b5f538b9" />
 
-In the project directory, you can run:
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🎯 Main Goal
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The primary goal of this project is to provide a clear, hands-on example of how to build a modern web application with **Firebase Authentication** and **Firestore Database**. It serves as a practical guide for understanding user authentication flows, real-time data synchronization, and secure database rules in a real-world context.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 💻 Technology Stack
 
-### `npm run build`
+- **Frontend:** [React.js](https://reactjs.org/) (with Hooks)
+- **Backend & Database:** [Google Firebase](https://firebase.google.com/)
+  - **Authentication:** Manages user sign-up, login, and profile information.
+  - **Firestore:** A NoSQL, real-time database for storing user-specific tasks.
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) for a utility-first, modern design.
+- **Deployment:** [Vercel](https://vercel.com/)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## ✨ Features
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Secure User Authentication:** Users can sign up with a full name, email, and password.
+- **Persistent Login:** User sessions are managed, keeping them logged in across browser sessions.
+- **Private Task Management:** Each user has their own private list of tasks. Data is secured so one user cannot see another's tasks.
+- **Full CRUD Functionality:**
+  - **Create:** Add new tasks to the list.
+  - **Read:** View all existing tasks in real-time.
+  - **Update:** Mark tasks as complete and edit task text.
+  - **Delete:** Remove tasks from the list.
+- **Real-Time Database:** Changes made to the task list are reflected instantly across all open sessions without needing a page refresh, thanks to Firestore's real-time listeners.
+- **Light & Dark Mode:** A theme toggle to switch between light and dark modes for user comfort.
+- **Responsive Design:** A clean and functional UI that works seamlessly on desktop and mobile devices.
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🚀 Getting Started: Running the Project Locally
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Follow these steps to set up and run this project on your local machine using your own Firebase credentials.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Step 1: Create Your Firebase Project
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1.  Go to the [Firebase Console](https://console.firebase.google.com/).
+2.  Click **"Add project"** and give your project a name (e.g., "My Task Manager").
+3.  Once the project is created, you'll be on the project dashboard. Click the **web icon (`</>`)** to add a web app.
+4.  Give your app a nickname and click **"Register app"**. Firebase will provide you with a `firebaseConfig` object. **Copy this object**—you'll need it soon.
+5.  In the Firebase console menu, go to **Build > Authentication**. Click the "Get started" button, and on the "Sign-in method" tab, enable the **"Email/Password"** provider.
+6.  Next, go to **Build > Firestore Database**. Click **"Create database"**, start in **production mode**, and choose a location for your servers.
 
-## Learn More
+### Step 2: Set Up Firestore Security Rules
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1.  In the Firestore Database section, go to the **"Rules"** tab.
+2.  Replace the default rules with the following secure rule, then click **"Publish"**:
+    ```
+    rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /users/{userId}/tasks/{taskId} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+      }
+    }
+    ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Step 3: Clone and Configure the Local Project
 
-### Code Splitting
+1.  **Clone the Repository:** Open your terminal and clone this project.
+    ```bash
+    git clone [https://github.com/milanprajapati571/Task-Manager-Firebase-App.git](https://github.com/milanprajapati571/Task-Manager-Firebase-App.git)
+    cd Task-Manager-Firebase-App
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2.  **Install Dependencies:**
+    ```bash
+    npm install
+    ```
 
-### Analyzing the Bundle Size
+3.  **Create Environment File:** In the root of the project folder, create a new file named `.env.local`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+4.  **Add Your Firebase Credentials:** Paste the `firebaseConfig` object you copied earlier into the `.env.local` file. The keys **must** start with `REACT_APP_`.
+    ```
+    REACT_APP_API_KEY="your-api-key"
+    REACT_APP_AUTH_DOMAIN="your-auth-domain"
+    REACT_APP_PROJECT_ID="your-project-id"
+    REACT_APP_STORAGE_BUCKET="your-storage-bucket"
+    REACT_APP_MESSAGING_SENDER_ID="your-messaging-sender-id"
+    REACT_APP_APP_ID="your-app-id"
+    ```
 
-### Making a Progressive Web App
+### Step 4: Run the Application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1.  Start the React development server:
+    ```bash
+    npm start
+    ```
+2.  Your browser will open to `http://localhost:3000`, and the application will be running, connected to **your** Firebase backend!
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🤝 Contributor
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Milan Prajapati** - [milanprajapati571](https://github.com/milanprajapati571)
